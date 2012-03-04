@@ -103,7 +103,8 @@ class Redirect(Response):
 
     def __init__(self, location, absolute_path=False):
 
-        if location.startswith('/') and not absolute_path:
+        if (location.startswith('/') and not absolute_path and
+                hasattr(settings, 'SITE_ROOT')):
             location = '/'.join([settings.SITE_ROOT.rstrip('/'),
                 location.lstrip('/')])
 
