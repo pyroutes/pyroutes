@@ -15,7 +15,8 @@ try:
 except ImportError:
     pass
 
-desc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+base_dir = os.path.dirname(__file__)
+long_description = open(os.path.join(base_dir, 'README.rst')).read()
 
 setup(
     name = "pyroutes",
@@ -24,7 +25,7 @@ setup(
     author = 'Kristian Klette',
     description = "A small WSGI wrapper for creating small python web apps",
     license = 'GPLv2',
-    long_description = desc,
+    long_description = long_description,
     url = 'http://github.com/pyroutes/pyroutes',
     package_data = {'pyroutes': ['default_templates/*.xml', 'default_templates/fileserver/*.xml']},
     packages = ['pyroutes', 'pyroutes.http', 'pyroutes.template', 'pyroutes.contrib', 'pyroutes.middleware'],
