@@ -2,6 +2,13 @@
 # encoding: utf-8
 
 from distutils.core import setup
+
+try:
+    from distutils.command.build_py import build_py_2to3 \
+            as build_py
+except ImportError:
+    from distutils.command.build_py import build_py
+
 import os
 
 setup(
@@ -17,6 +24,7 @@ setup(
     requires = ['wsgiref'],
     package_data = {'pyroutes': ['default_templates/*.xml', 'default_templates/fileserver/*.xml']},
     scripts = ['bin/pyroutes-admin.py'],
+    cmdclass = {'build_py': build_py},
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
