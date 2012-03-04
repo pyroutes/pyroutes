@@ -6,6 +6,7 @@ This module holds wrappers for xmltemplate, and xmltemplate itself.
 """
 
 import os
+import sys
 from pyroutes.template import xmltemplate
 from pyroutes import settings
 
@@ -57,4 +58,6 @@ class TemplateRenderer(object):
         else:
             master = xmltemplate.process_file(
                 os.path.join(self.template_dir, template), data)
-        return master.toxml().encode("utf-8")
+        if sys.version_info >= (3,):
+            return master.toxml()
+        return master.toxml().encode('utf-8')
