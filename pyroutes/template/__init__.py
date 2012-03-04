@@ -58,6 +58,4 @@ class TemplateRenderer(object):
         else:
             master = xmltemplate.process_file(
                 os.path.join(self.template_dir, template), data)
-        if sys.version_info >= (3,):
-            return master.toxml()
         return master.toxml().encode('utf-8')
