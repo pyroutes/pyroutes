@@ -123,13 +123,12 @@ def fileserver(request, *path_list):
     headers.append(('Content-Type', contenttype))
     headers.append(('Content-Length', str(size)))
 
+    def file_wrapper(iterable):
+        return iter(lambda: iterable.read(8192), '')
     if 'wsgi.file_wrapper' in request.ENV:
-        wrapper = request.ENV['wsgi.file_wrapper']
-    else:
-        def wrapper(iterable):
-            return iter(lambda: iterable.read(8192), '')
+        file_wrapper = request.ENV['wsgi.file_wrapper']
 
     fh = open(path, 'rb')
-    file_to_send = wrapper(fh)
+    wrapped_file = file_wrapper(fh)
 
-    return Response(file_to_send, headers=headers)
+    return Response(wrapped_file, headers=headers)
