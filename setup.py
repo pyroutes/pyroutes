@@ -8,10 +8,14 @@ import sys
 
 kwargs = {}
 
+packages = ['pyroutes', 'pyroutes.http', 'pyroutes.template', 'pyroutes.contrib', 'pyroutes.middleware']
+
 try:
     import setuptools
     kwargs['use_2to3'] = True
-    kwargs['test_suite'] = 'tests'
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
+        packages.append('tests')
+        kwargs['test_suite'] = 'tests'
 except ImportError:
     pass
 
@@ -28,7 +32,7 @@ setup(
     long_description = long_description,
     url = 'http://github.com/pyroutes/pyroutes',
     package_data = {'pyroutes': ['default_templates/*.xml', 'default_templates/fileserver/*.xml']},
-    packages = ['pyroutes', 'pyroutes.http', 'pyroutes.template', 'pyroutes.contrib', 'pyroutes.middleware'],
+    packages = packages,
     requires = ['wsgiref'],
     scripts = ['bin/pyroutes-admin.py'],
     classifiers = [
