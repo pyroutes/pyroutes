@@ -40,3 +40,9 @@ try:
     from pyroutes_settings import *
 except ImportError:
     pass
+
+try:
+    # This is done in case the key is given as unicode data.
+    SECRET_KEY = SECRET_KEY.encode('iso-8859-1')
+except AttributeError:
+    pass
