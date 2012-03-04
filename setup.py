@@ -3,13 +3,17 @@
 
 from distutils.core import setup
 
-try:
-    from distutils.command.build_py import build_py_2to3 \
-            as build_py
-except ImportError:
-    from distutils.command.build_py import build_py
-
 import os
+import sys
+
+kwargs = {}
+
+try:
+    import setuptools
+    kwargs['use_2to3'] = True
+    kwargs['test_suite'] = 'tests'
+except ImportError:
+    pass
 
 desc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
@@ -26,17 +30,17 @@ setup(
     packages = ['pyroutes', 'pyroutes.http', 'pyroutes.template', 'pyroutes.contrib', 'pyroutes.middleware'],
     requires = ['wsgiref'],
     scripts = ['bin/pyroutes-admin.py'],
-    cmdclass = {'build_py': build_py},
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: WSGI',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Operating System :: OS Independent',
-        ]
-
+    ],
+    **kwargs
 )
-
