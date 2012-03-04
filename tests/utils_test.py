@@ -70,7 +70,7 @@ class TestFileServer(unittest.TestCase):
         for header in ['Last-Modified', 'Content-Length']:
             self.assertTrue(header in [a[0] for a in response.headers])
         self.assertTrue(('Content-Type', 'text/x-python') in response.headers)
-        self.assertTrue(hasattr(response.content, 'filelike'))
+        self.assertTrue('pyroutes' in next(response.content).decode('utf-8'))
 
     def test_noaccess(self):
         test_file = os.path.join('.', 'tests', 'responsetest.py')
