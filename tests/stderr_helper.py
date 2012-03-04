@@ -4,12 +4,12 @@ import sys
 import pyroutes
 
 try:
-    import cStringIO as StringIO
+    from cStringIO import StringIO
 except ImportError:
-    import StringIO
+    from StringIO import StringIO
 
 real_stderr = sys.stderr
-fake_stderr = StringIO.StringIO()
+fake_stderr = StringIO()
 real_loghandlers = pyroutes.LOGGER.handlers
 fake_loghandlers = [logging.StreamHandler(fake_stderr)]
 
