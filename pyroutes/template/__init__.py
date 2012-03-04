@@ -58,4 +58,4 @@ class TemplateRenderer(object):
         else:
             master = xmltemplate.process_file(
                 os.path.join(self.template_dir, template), data)
-        return master.toxml().encode('utf-8')
+        return master.toxml()

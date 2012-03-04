@@ -31,6 +31,8 @@ class Dispatcher(object):
         start_response(response.status_code, headers)
 
         if isinstance(response.content, basestring):
+            if isinstance(response.content, unicode):
+                response.content = response.content.encode('utf-8')
             return [response.content]
         else:
             return response.content
