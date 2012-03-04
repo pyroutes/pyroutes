@@ -6,5 +6,8 @@ python:
 script:
   - python setup.py test
 notifications:
-  irc: "irc.freenode.org#pyroutes"
+  irc:
+    channels:
+      - "irc.freenode.org#pyroutes"
+    on_success: change
   email: false
