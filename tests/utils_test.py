@@ -25,7 +25,7 @@ class TestFileServer(unittest.TestCase):
         self.request.ENV['PATH_INFO'] = '/'
         response = utils.fileserver(self.request)
         for dir in [d for d in os.listdir(os.path.abspath(os.path.curdir)) if os.path.isdir(d)]:
-            self.assertNotEqual(response.content.find('<a href="%s/">%s/</a>' % (dir, dir)), -1)
+            self.assertNotEqual(response.content.decode('utf-8').find('<a href="%s/">%s/</a>' % (dir, dir)), -1)
 
     def test_if_modified_since(self):
         modified = datetime.fromtimestamp(os.path.getmtime('pyroutes'))
@@ -61,7 +61,7 @@ class TestFileServer(unittest.TestCase):
         self.assertEqual(response.status_code, '200 OK')
         for header in ['Content-Type', 'Last-Modified']:
             self.assertTrue(header in [a[0] for a in response.headers])
-        self.assertNotEqual(response.content.find('<a href="__init__.py">__init__.py</a>'), -1)
+        self.assertNotEqual(response.content.decode('utf-8').find('<a href="__init__.py">__init__.py</a>'), -1)
 
     def test_host_file(self):
         self.request.ENV['PATH_INFO'] = '/tests/utils_test.py'
