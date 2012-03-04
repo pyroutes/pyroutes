@@ -1,5 +1,6 @@
 #encoding: utf-8
 
+import sys
 import unittest
 
 import hmac
@@ -10,6 +11,9 @@ except ImportError:
 
 from pyroutes.http.cookies import *
 from pyroutes import settings
+
+if sys.version_info >= (3,):
+    from imp import reload
 
 class TestRequestCookieHandler(unittest.TestCase):
 

@@ -3,12 +3,16 @@
 import cgi
 import unittest
 import wsgiref.util
+import sys
 
 import pyroutes
 from pyroutes.http.request import Request
 from pyroutes.http.response import Response
 
 import stderr_helper
+
+if sys.version_info >= (3,):
+    from imp import reload
 
 class TestRoute(unittest.TestCase):
     def setUp(self):
