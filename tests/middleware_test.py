@@ -64,7 +64,7 @@ class TestErrorHandlerMiddleware(unittest.TestCase):
         ehm = ErrorHandlerMiddleware(errorous, route)
         response = ehm(self.request)
         self.assertEquals(response.status_code, '500 Internal Server Error')
-        self.assertTrue('ValueError' in response.content.decode('utf-8'))
+        self.assertTrue('ValueError' in response.content)
         pyroutes.settings.DEBUG = old_debug
 
     def test_return_403(self):

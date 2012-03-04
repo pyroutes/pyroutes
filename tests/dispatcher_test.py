@@ -155,8 +155,8 @@ class TestDispatcher(unittest.TestCase):
             self.assertEquals(response, [result])
             self.assertEquals(args_given, [('200 OK', [('Content-Type', 'text/html; charset=utf-8')]), {}])
 
-        do_test(lambda x: Response('result'), '/response1', 'result')
-        do_test(lambda x: Response(['result']), '/response2', 'result')
+        do_test(lambda x: Response('result'), '/response1', b'result')
+        do_test(lambda x: Response([b'result']), '/response2', b'result')
 
     def test_middleware_chainer(self):
         handler = lambda x: 'result'

@@ -32,7 +32,7 @@ class TestExceptions(unittest.TestCase):
         instance = exception()
         self.assertEqual(instance.code, code)
         response = instance.get_response('/foo')
-        self.assertNotEqual(response.content.decode('utf-8').find(code_status), -1)
+        self.assertNotEqual(response.content.find(code_status), -1)
         self.assertEqual(response.headers, [('Content-Type', settings.DEFAULT_CONTENT_TYPE)])
         self.assertEqual(response.status_code, code_status)
 

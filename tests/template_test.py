@@ -14,7 +14,7 @@ class TestXMLTemplates(unittest.TestCase):
         pass
 
     def _render_template(self, template, data):
-        output = self.renderer.render(template, data).decode('utf-8')
+        output = self.renderer.render(template, data)
         self.assertTrue(self.test_string in output)
 
 class TestsWithBaseTemplate(TestXMLTemplates):
