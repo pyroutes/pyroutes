@@ -16,7 +16,6 @@ from pyroutes.http.response import Response, Redirect, Http403, Http404
 from pyroutes.contrib import autoreload
 
 from wsgiref.simple_server import make_server
-from wsgiref.util import FileWrapper
 
 def devserver(application, port=8001, address='0.0.0.0', auto_reload=True):
     """
@@ -119,10 +118,18 @@ def fileserver(request, *path_list):
         )
 
     contenttype = mimetypes.guess_type(path)[0] or "application/octet-stream"
-    file_to_send = FileWrapper(open(path))
     size = os.path.getsize(path)
 
     headers.append(('Content-Type', contenttype))
     headers.append(('Content-Length', str(size)))
+
+    if 'wsgi.file_wrapper' in request.ENV:
+        wrapper = request.ENV['wsgi.file_wrapper']
+    else:
+        def wrapper(iterable):
+            return iter(lambda: iterable.read(8192), '')
+
+    fh = open(path, 'rb')
+    file_to_send = wrapper(fh)
 
     return Response(file_to_send, headers=headers)
