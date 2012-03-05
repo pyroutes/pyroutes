@@ -14,7 +14,7 @@ class TestResponse(unittest.TestCase):
     def test_init(self):
         response = Response("Hello", [('Content-Length', 1000)], 500)
         self.assertEqual(response.content, "Hello")
-        self.assertEqual(response.headers, [('Content-Type', settings.DEFAULT_CONTENT_TYPE), ('Content-Length', 1000)])
+        self.assertEqual(sorted(response.headers), sorted([('Content-Type', settings.DEFAULT_CONTENT_TYPE), ('Content-Length', 1000)]))
         self.assertEqual(response.status_code, '500 Internal Server Error')
 
     def test_duplicated_content_type_header(self):
@@ -23,6 +23,15 @@ class TestResponse(unittest.TestCase):
         self.assertTrue(len(response.headers) == 1, "Should contain only one Content-Type header")
         # And this header should not be settings.DEFAULT_CONTENT_TYPE
         self.assertEqual(response.headers, content_header)
+
+    def test_headers_as_dict(self):
+        dict_headers = {'Content-Type': 'text/plain', 'X-Pyroutes': '1.0'}
+        expected_headers = [('Content-Type', 'text/plain'), ('X-Pyroutes', '1.0')]
+
+        response = Response(headers=dict_headers)
+        self.assertEqual(sorted(response.headers), sorted(expected_headers))
+
+
 
 class TestExceptions(unittest.TestCase):
     def test_base_exception(self):

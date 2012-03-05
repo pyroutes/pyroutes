@@ -55,12 +55,11 @@ _RESPONSES = {
 
 class Response(object):
     """
-    A wrapper class for a response to a route. Takes
-    a content, headers and status_code parameter.
-    headers should be passed in as a list of tuples.
-    status_code can be a string including status name, or an integer.
-    If default_content_header is set and no Content-Type header is set,
-    settings.DEFAULT_CONTENT_TYPE is added as Content-Type.
+    A wrapper class for a response to a route. Takes a content, headers and
+    status_code parameter.  headers should be passed in as a list of tuples,
+    tuple of tuples or a dict.  status_code can be a string including status
+    name, or an integer. If default_content_header is set and no Content-Type
+    header is set, settings.DEFAULT_CONTENT_TYPE is added as Content-Type.
     """
     def __init__(self, content=None, headers=None, status_code='200 OK',
             default_content_header=True):
@@ -68,16 +67,23 @@ class Response(object):
             self.content = []
         else:
             self.content = content
+        
+        self.headers = []
 
         header_names = []
         if headers:
-            header_names = [header[0] for header in headers]
+            if isinstance(headers, dict):
+                for header, value in headers.items():
+                    self.headers += ((header, value),)
+                    header_names.append(header)
+            elif isinstance(headers, (tuple, list)):
+                header_names = [header[0] for header in headers]
+                self.headers += headers
+            else:
+                raise ValueError("headers must be dict, tuple or list")
 
-        self.headers = []
         if default_content_header and 'Content-Type' not in header_names:
             self.headers.append(('Content-Type', settings.DEFAULT_CONTENT_TYPE))
-        if not headers is None:
-            self.headers += headers
 
         if status_code in _RESPONSES:
             self.status_code = "%s %s" % (status_code, _RESPONSES[status_code])
