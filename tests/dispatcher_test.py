@@ -1,10 +1,13 @@
 import unittest
+import sys
 import pyroutes
 from pyroutes.dispatcher import Dispatcher
 from pyroutes.http.request import Request
 from pyroutes.http.response import Response
 from pyroutes.route import Route
 import pyroutes.settings as settings
+
+RESULT = u'result'.encode('ascii')
 
 class TestDispatcher(unittest.TestCase):
 
@@ -155,8 +158,8 @@ class TestDispatcher(unittest.TestCase):
             self.assertEquals(response, [result])
             self.assertEquals(args_given, [('200 OK', [('Content-Type', 'text/html; charset=utf-8')]), {}])
 
-        do_test(lambda x: Response('result'), '/response1', b'result')
-        do_test(lambda x: Response([b'result']), '/response2', b'result')
+        do_test(lambda x: Response('result'), '/response1', RESULT)
+        do_test(lambda x: Response([RESULT]), '/response2', RESULT)
 
     def test_middleware_chainer(self):
         handler = lambda x: 'result'
