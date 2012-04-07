@@ -1,4 +1,5 @@
 import unittest
+import sys
 import pyroutes
 from pyroutes.dispatcher import Dispatcher
 from pyroutes.http.request import Request
@@ -155,8 +156,13 @@ class TestDispatcher(unittest.TestCase):
             self.assertEquals(response, [result])
             self.assertEquals(args_given, [('200 OK', [('Content-Type', 'text/html; charset=utf-8')]), {}])
 
-        do_test(lambda x: Response('result'), '/response1', b'result')
-        do_test(lambda x: Response([b'result']), '/response2', b'result')
+
+        if sys.version_info < (2,6):
+            do_test(lambda x: Response('result'), '/response1', 'result')
+            do_test(lambda x: Response(['result']), '/response2', 'result')
+        else:
+            do_test(lambda x: Response('result'), '/response1', eval("b'result'"))
+            do_test(lambda x: Response([eval("b'result'")]), '/response2', eval("b'result'"))
 
     def test_middleware_chainer(self):
         handler = lambda x: 'result'
