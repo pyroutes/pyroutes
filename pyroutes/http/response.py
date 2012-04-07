@@ -127,7 +127,7 @@ class HttpException(Exception):
     Use e.g. settings.TEMPLATE_403 to override the document for HTTP 403.
     """
     def __init__(self, template_data=None):
-        super(HttpException, self).__init__()
+        Exception.__init__(self)
         if not hasattr(self, 'code'):
             raise TypeError('You tried to instanciate HttpException. ' +
                     'Please, only create instances of Http{403,404,500}.')

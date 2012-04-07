@@ -9,7 +9,7 @@ import pyroutes
 from pyroutes.http.request import Request
 from pyroutes.http.response import Response
 
-from . import stderr_helper
+import stderr_helper
 
 if sys.version_info >= (3,):
     from imp import reload

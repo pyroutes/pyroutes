@@ -7,7 +7,7 @@ from pyroutes.http.request import Request
 import pyroutes.settings
 import wsgiref.util
 
-from . import stderr_helper
+import stderr_helper
 
 def passtrough(req):
     return 'PASSTHROUGH'

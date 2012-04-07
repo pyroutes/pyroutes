@@ -1,9 +1,9 @@
-from . import cookie_test
-from . import routes_test
-from . import stderr_helper
-from . import utils_test
-from . import dispatcher_test
-from . import middleware_test
-from . import response_test
-from . import route_test
-from . import template_test
+import cookie_test
+import routes_test
+import stderr_helper
+import utils_test
+import dispatcher_test
+import middleware_test
+import response_test
+import route_test
+import template_test
