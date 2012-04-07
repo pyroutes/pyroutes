@@ -1,9 +1,14 @@
 Changelog
 =========
 
-Master
+Release 0.5.0
 -------------
 
+- Fixed Cookie path default value to be relative to base site location.
+- Added AppendSlashes middleware for forcing URLs to end in slash. Not on as
+  default.
+- Changed handling of requests against invalig URLs (We now process all
+  requests as if their URLs had a leading slash, regardless...)
 - Created ``Responsify`` middleware, and included it as default. This allows
   you to return from a route withoute wrapping your response in a Response
   object.
