@@ -7,6 +7,8 @@ from pyroutes.http.response import Response
 from pyroutes.route import Route
 import pyroutes.settings as settings
 
+RESULT = u'result'.encode('ascii')
+
 class TestDispatcher(unittest.TestCase):
 
     SCRIPT_NAME  = '/path/to/the/app/root'
@@ -156,13 +158,8 @@ class TestDispatcher(unittest.TestCase):
             self.assertEquals(response, [result])
             self.assertEquals(args_given, [('200 OK', [('Content-Type', 'text/html; charset=utf-8')]), {}])
 
-
-        if sys.version_info < (2,6):
-            do_test(lambda x: Response('result'), '/response1', 'result')
-            do_test(lambda x: Response(['result']), '/response2', 'result')
-        else:
-            do_test(lambda x: Response('result'), '/response1', eval("b'result'"))
-            do_test(lambda x: Response([eval("b'result'")]), '/response2', eval("b'result'"))
+        do_test(lambda x: Response('result'), '/response1', RESULT)
+        do_test(lambda x: Response([RESULT]), '/response2', RESULT)
 
     def test_middleware_chainer(self):
         handler = lambda x: 'result'

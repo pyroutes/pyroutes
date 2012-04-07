@@ -15,12 +15,8 @@ from pyroutes import settings
 if sys.version_info >= (3,):
     from imp import reload
 
-if sys.version_info < (2,6):
-    TEST_KEY = 'asdfnaj2308sydfahli37flas36al9gaiufw'
-    TEST_VALUE = 'foobar'
-else:
-    TEST_KEY = eval("b'asdfnaj2308sydfahli37flas36al9gaiufw'")
-    TEST_VALUE = eval("b'foobar'")
+TEST_KEY = u'asdfnaj2308sydfahli37flas36al9gaiufw'.encode('ascii')
+TEST_VALUE = u'foobar'.encode('ascii')
 
 class TestRequestCookieHandler(unittest.TestCase):
 
