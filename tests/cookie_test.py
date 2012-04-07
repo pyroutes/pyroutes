@@ -15,13 +15,20 @@ from pyroutes import settings
 if sys.version_info >= (3,):
     from imp import reload
 
+if sys.version < (2,6):
+    TEST_KEY = 'asdfnaj2308sydfahli37flas36al9gaiufw'
+    TEST_VALUE = 'foobar'
+else:
+    TEST_KEY = b'asdfnaj2308sydfahli37flas36al9gaiufw'
+    TEST_VALUE = b'foobar'
+
 class TestRequestCookieHandler(unittest.TestCase):
 
     def setUp(self):
-        settings.SECRET_KEY = b'asdfnaj2308sydfahli37flas36al9gaiufw'
+        settings.SECRET_KEY = TEST_KEY
         self.env = {'HTTP_COOKIE': (
                 'foo=bar;foo_hash=%s;bar=foo;baz=b;baz_hash=b' %
-                hmac.HMAC(settings.SECRET_KEY, b'foobar', sha1).hexdigest()
+                hmac.HMAC(settings.SECRET_KEY, TEST_VALUE, sha1).hexdigest()
                 )}
         self.cookie_request_handler = RequestCookieHandler(self.env)
 
@@ -52,18 +59,18 @@ class TestRequestCookieHandler(unittest.TestCase):
     def test_get_cookie_without_key_setting(self):
         reload(settings)
         self.assertRaises(CookieKeyMissing, self.cookie_request_handler.get_cookie, 'foo')
-        settings.SECRET_KEY = b'asdfnaj2308sydfahli37flas36al9gaiufw'
+        settings.SECRET_KEY = TEST_KEY
 
 class TestResponseCookieHandler(unittest.TestCase):
 
     def setUp(self):
-        settings.SECRET_KEY = b'asdfnaj2308sydfahli37flas36al9gaiufw'
+        settings.SECRET_KEY = TEST_KEY
         settings.SITE_ROOT = ''
         self.cookies = ResponseCookieHandler()
 
     def test_add_cookie(self):
         self.cookies.add_cookie('foo', 'bar')
-        cookie_hash = hmac.HMAC(settings.SECRET_KEY, b'foobar', sha1).hexdigest()
+        cookie_hash = hmac.HMAC(settings.SECRET_KEY, TEST_VALUE, sha1).hexdigest()
         self.assertEqual(self.cookies.cookie_headers[0], ('Set-Cookie', 'foo=bar; path=/'))
         self.assertEqual(self.cookies.cookie_headers[1], ('Set-Cookie', 'foo_hash=%s; path=/' % cookie_hash))
 
@@ -90,7 +97,7 @@ class TestResponseCookieHandler(unittest.TestCase):
         exp = datetime.datetime(2000,1,1,1,1,1)
         exp_string = exp.strftime("%a, %d-%b-%Y %H:%M:%S GMT")
         self.cookies.add_cookie('foo', 'bar', exp)
-        cookie_hash = hmac.HMAC(settings.SECRET_KEY, b'foobar', sha1).hexdigest()
+        cookie_hash = hmac.HMAC(settings.SECRET_KEY, TEST_VALUE, sha1).hexdigest()
         self.assertEqual(self.cookies.cookie_headers[0], ('Set-Cookie', 'foo=bar; expires=%s; path=/' % exp_string))
         self.assertEqual(self.cookies.cookie_headers[1], ('Set-Cookie', 'foo_hash=%s; expires=%s; path=/' % (cookie_hash, exp_string)))
 
