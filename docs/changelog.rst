@@ -7,6 +7,7 @@ Master
 - Created ``Responsify`` middleware, and included it as default. This allows
   you to return from a route withoute wrapping your response in a Response
   object.
+- Ensured compatability across Python versions 2.4 through 3.2
 
 Release 0.4.1
 -------------
