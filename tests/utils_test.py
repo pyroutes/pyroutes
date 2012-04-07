@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import os
+import sys
 import unittest
 import wsgiref.util
 
@@ -70,7 +71,10 @@ class TestFileServer(unittest.TestCase):
         for header in ['Last-Modified', 'Content-Length']:
             self.assertTrue(header in [a[0] for a in response.headers])
         self.assertTrue(('Content-Type', 'text/x-python') in response.headers)
-        self.assertTrue('pyroutes' in response.content.next().decode('utf-8'))
+        if sys.version_info >= (2,6):
+            self.assertTrue('pyroutes' in next(response.content).decode('utf-8'))
+        else:
+            self.assertTrue('pyroutes' in response.content.next().decode('utf-8'))
 
     def test_noaccess(self):
         test_file = os.path.join('.', 'tests', 'responsetest.py')
