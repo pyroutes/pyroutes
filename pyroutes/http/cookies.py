@@ -1,16 +1,12 @@
-#encoding: utf-8
-
 """
 Cookie handling classese
 """
 
+from hashlib import sha1
 import hmac
-try:
-    from hashlib import sha1
-except ImportError:
-    import sha as sha1
 
 from pyroutes import settings
+
 
 def str_encode(string, encoding='iso-8859-1'):
     try:
@@ -20,6 +16,7 @@ def str_encode(string, encoding='iso-8859-1'):
     except AttributeError:
         pass
     return string
+
 
 class RequestCookieHandler(object):
     """
@@ -48,8 +45,9 @@ class RequestCookieHandler(object):
                     raise CookieKeyMissing(
                             'Set SECRET_KEY in settings to use cookies')
                 cookie_hash = self._raw_cookies['%s_hash' % key]
-                value_hash = hmac.HMAC(settings.SECRET_KEY, str_encode(key +
-                    self._raw_cookies[key]), sha1).hexdigest()
+                value_hash = hmac.HMAC(settings.SECRET_KEY,
+                                       str_encode(key + self._raw_cookies[key]),
+                                       sha1).hexdigest()
                 if cookie_hash == value_hash:
                     return self._raw_cookies[key]
                 else:
@@ -111,7 +109,7 @@ class ResponseCookieHandler(object):
                         'Set SECRET_KEY in settings to use cookies')
 
             cookie_hash = hmac.HMAC(settings.SECRET_KEY,
-                    str_encode(key + value), sha1).hexdigest()
+                                    str_encode(key + value), sha1).hexdigest()
             cookie_hash = '%s_hash=%s' % (key, cookie_hash)
 
             if expires:
@@ -132,17 +130,19 @@ class ResponseCookieHandler(object):
         self.cookie_headers.append(
          ('Set-Cookie', "%s=null; expires=Thu, 01-Jan-1970 00:00:01 GMT" % key))
         self.cookie_headers.append(
-         ('Set-Cookie', "%s_hash=null; expires=Thu, 01-Jan-1970 00:00:01 GMT"
-            % key))
+         ('Set-Cookie', "%s_hash=null; expires=Thu, 01-Jan-1970 00:00:01 GMT" % key))
+
 
 class CookieHashMissing(LookupError):
     "Exception raised if a signed cookie is missing it signature pair."
     pass
 
+
 class CookieHashInvalid(ValueError):
     """Exception raised if a signature is invalid. Can be caused by either
     corrupt cookie, or the user tampering."""
     pass
+
 
 class CookieKeyMissing(AttributeError):
     """Raised when SECRET_KEY is missing"""

@@ -5,6 +5,7 @@ A module that holds the Route class. A Route is a mapping between a path (e.g.
 
 import inspect
 
+
 class Route(object):
     """
     The Route object. Noramlly created using the route function, not through
@@ -18,11 +19,10 @@ class Route(object):
         self.path = path
         self.maps = None
 
-        args, varargs, _, defaults = inspect.getargspec(handler)
-        self.arguments = args
-        self.required_argument_length = len(args) - 1
-        self.variable_arguments = varargs
-        self.variable_defaults = defaults
+        specs = inspect.getfullargspec(handler)
+        self.required_argument_length = len(specs.args) - 1
+        self.variable_arguments = specs.varargs
+        self.variable_defaults = specs.defaults
 
     def __repr__(self):
         return u'Route(%s, %s)' % (self.handler.__name__, self.path)
@@ -38,7 +38,7 @@ class Route(object):
         """
         Finds the parameters to pass to the route given the URL requested.
         """
-        subpath = environ.get('PATH_INFO','')[len(self.path):]
+        subpath = environ.get('PATH_INFO', '')[len(self.path):]
         args = subpath.strip('/').split('/')
         if args[-1] == '':
             args.pop()

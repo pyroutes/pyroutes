@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#encoding: utf-8
 
 """
 Main pyroutes module
@@ -18,6 +17,7 @@ __dispatcher__ = Dispatcher()
 
 logging.basicConfig()
 LOGGER = logging.getLogger('pyroutes')
+
 
 def route(path):
     """
@@ -52,12 +52,12 @@ def route(path):
         See the pyroutes.route docstring
         """
         if path in __routes__:
-            LOGGER.warn("Redefining handler for %s with %s" %
-                    (path, func))
+            LOGGER.warn("Redefining handler for %s with %s" % (path, func))
         route_instance = Route(func, path)
         __routes__[path] = route_instance
         return route_instance
     return decorator
+
 
 def reverse_url(handler_name, absolute_path=False):
     """
@@ -66,13 +66,14 @@ def reverse_url(handler_name, absolute_path=False):
     >>> reverse_url('login')
     /account/login
     """
-    for path, route_instance in __routes__.iteritems():
+    for path, route_instance in __routes__.items():
         if route_instance.handler.__name__ == handler_name:
             if absolute_path:
                 return path
             else:
                 return '/'.join([settings.SITE_ROOT, path.strip('/')])
     raise ValueError('No handler function named %s' % handler_name)
+
 
 def application(environ, start_response):
     """

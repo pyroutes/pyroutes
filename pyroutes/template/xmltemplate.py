@@ -4,21 +4,23 @@ xmltemplate, from http://bzr.sesse.net/xml-template/
 
 import xml.dom.minidom
 
+
 def process_file(filename, obj, clean=True):
     "Process xml reading it from a file"
     doc = xml.dom.minidom.parse(filename)
     process(doc, obj, clean)
     return doc
 
+
 def process(node, obj, clean=True):
     "Process xml given a xml.dom.minidom node"
-    if isinstance(obj, basestring):            # overwrite
-        while not node.firstChild is None:
+    if isinstance(obj, str):            # overwrite
+        while node.firstChild is not None:
             node.removeChild(node.firstChild)
         doc = _get_document_element(node)
         node.appendChild(doc.createTextNode(obj))
     elif isinstance(obj, xml.dom.Node):    # overwrite
-        while not node.firstChild is None:
+        while node.firstChild is not None:
             node.removeChild(node.firstChild)
 
         if isinstance(obj, xml.dom.minidom.Document):
@@ -37,7 +39,7 @@ def process(node, obj, clean=True):
 
                 attrs = child.attributes
                 attrs_to_remove = []
-                if not attrs is None:
+                if attrs is not None:
                     for i in range(attrs.length):
                         attr = attrs.item(i)
                         if (attr.namespaceURI == "http://template.sesse.net/"
@@ -54,19 +56,18 @@ def process(node, obj, clean=True):
                         if child.hasAttribute(attr):
                             child.removeAttribute(attr)
 
-
                 # check all substitutions to see if we found anything
                 # appropriate
                 for key in obj.keys():
                     if key.startswith(child.tagName + "/"):
                         child.setAttribute(key.split("/")[1], obj[key])
-                    elif ((not tag_id is None) and
+                    elif ((tag_id is not None) and
                             key.startswith("#" + tag_id + "/")):
                         child.setAttribute(key.split("/")[1], obj[key])
 
                     if not processed:
-                        if (key == child.localName or ((not tag_id is None) and
-                                key == "#" + tag_id)):
+                        if (key == child.localName or ((tag_id is not None) and
+                                                       key == "#" + tag_id)):
                             process(child, obj[key], clean)
                             processed = True
 
@@ -76,7 +77,7 @@ def process(node, obj, clean=True):
         doc = _get_document_element(node)
         frag = doc.createElement("temporary-fragment")    # ugh
 
-        while not node.firstChild is None:
+        while node.firstChild is not None:
             child = node.firstChild
             node.removeChild(child)
             frag.appendChild(child)
@@ -95,7 +96,7 @@ def process(node, obj, clean=True):
         for child in node.childNodes:
             if (isinstance(child, xml.dom.minidom.Element) and
                     child.tagName == 'temporary-fragment'):
-                while not child.firstChild is None:
+                while child.firstChild is not None:
                     child2 = child.firstChild
                     child.removeChild(child2)
                     node.appendChild(child2)
@@ -106,6 +107,7 @@ def process(node, obj, clean=True):
 
     if clean:
         _clean(node)
+
 
 def alternate(tag, array, *elems):
     """
@@ -121,6 +123,7 @@ def alternate(tag, array, *elems):
 
     return array
 
+
 def _clean(node):
     if (node.nodeType == xml.dom.Node.ELEMENT_NODE and
             node.namespaceURI == "http://template.sesse.net/"):
@@ -128,12 +131,13 @@ def _clean(node):
         # further up after we've done any required replacements
         parent = node.parentNode
 
-        while not node.firstChild is None:
+        while node.firstChild is not None:
             child = node.firstChild
             node.removeChild(child)
             parent.insertBefore(child, node)
 
         parent.removeChild(node)
+
 
 # ugh
 def _get_document_element(node):

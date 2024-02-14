@@ -5,14 +5,12 @@ This module contains only the Request class, a key class in pyroutes. Request
 objects hold all meta about incoming requests.
 """
 
-from cgi import parse_qsl, FieldStorage
+from cgi import FieldStorage
+from io import StringIO
+from urllib.parse import parse_qsl
 
 from pyroutes.http.cookies import RequestCookieHandler
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
 
 class Request(object):
     """
@@ -102,8 +100,7 @@ class Request(object):
             for val in value:
                 self._assign_field_to_section(key, val, storage)
         else:
-            if (isinstance(value, tuple) and value[1] and
-              (isinstance(value[1], file) or hasattr(value[1], 'read'))):
+            if (isinstance(value, tuple) and value[1] and hasattr(value[1], 'read')):
 
                 # If an existing value exists for this key, convert to
                 # list-result
@@ -115,7 +112,7 @@ class Request(object):
                     self.FILES[key].append(value)
                 else:
                     self.FILES[key] = value
-            elif isinstance(value, basestring):
+            elif isinstance(value, str):
                 # If an existing value exists for this key,
                 # convert to list-result
                 if key in storage and not isinstance(storage[key], list):
@@ -138,11 +135,11 @@ class Request(object):
             else:
                 value = (field.filename, StringIO(data.getvalue(key)))
 
-        elif isinstance(value, basestring):
+        elif isinstance(value, bytes):
             try:
-                value = unicode(value, 'utf-8')
+                value = str(value, 'utf-8')
             except UnicodeDecodeError:
                 # If we can't understand the data as utf, try latin1
-                value = unicode(value, 'iso-8859-1')
+                value = str(value, 'iso-8859-1')
 
         return value

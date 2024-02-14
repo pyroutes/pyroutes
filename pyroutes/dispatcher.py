@@ -8,6 +8,7 @@ import pyroutes
 from pyroutes.http.request import Request
 import pyroutes.settings as settings
 
+
 class Dispatcher(object):
     """
     The pyroutes Dispatcher object. An instance of this object is kept directly
@@ -30,10 +31,10 @@ class Dispatcher(object):
         headers = self._combine_headers(response)
         start_response(response.status_code, headers)
 
-        if isinstance(response.content, basestring):
-            if isinstance(response.content, unicode):
-                response.content = response.content.encode('utf-8')
+        if isinstance(response.content, bytes):
             return [response.content]
+        elif isinstance(response.content, str):
+            return [response.content.encode('utf-8')]
         else:
             return response.content
 

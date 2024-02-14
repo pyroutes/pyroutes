@@ -12,21 +12,26 @@ import os
 from pyroutes import application, route
 from pyroutes.http.response import Response, Http403, Http404
 
+
 @route('/')
-def index(request):
+def index(_):
     return 'Hello world!'
 
+
 @route('/sayhello')
-def sayhello(request, name='world'):
+def sayhello(_, name='world'):
     return 'Hello %s!' % name
 
+
 @route('/archive')
-def archive(request, year, month=None, day=None):
+def archive(_, year, month=None, day=None):
     return 'Year: %s  Month: %s  Day: %s' % (year, month, day)
 
+
 @route('/pathprint')
-def archive(request, *args):
+def pathprint(_, *args):
     return 'User requested /%s under /pathprint' % '/'.join(args)
+
 
 @route('/newpost')
 def new_post(request):
@@ -34,18 +39,21 @@ def new_post(request):
         # Do stuff with image
         filename, data = request.FILES['image']
         data = data.read()
-    category = request.GET.get('category','default')
+    category = request.GET.get('category', 'default')
     title = request.POST.get('title', None)
     if not title:
         return 'No title!'
     return 'OK'
 
+
 @route('/pdf')
-def pdf(request):
-    return Response(open('mypdf.pdf', [('Content-Type', 'application/pdf')]))
+def pdf(_):
+    with open('mypdf.pdf') as fh:
+        return Response(fh, [('Content-Type', 'application/pdf')])
+
 
 @route('/decrypt_file')
-def decrypt(request, filename, key):
+def decrypt_file(request, filename, key):
     full_filename = os.path.join('secrets_folder', filename)
     if not os.path.exists(full_filename):
         raise Http404({'#details': 'No such file "%s"' % filename})
@@ -53,6 +61,7 @@ def decrypt(request, filename, key):
         return decrypt(full_filename, key)
     except KeyError:
         raise Http403({'#details': 'Key did not match file'})
+
 
 @route('/cookie-set')
 def set_cookies(request, message='Hi!'):
@@ -62,6 +71,7 @@ def set_cookies(request, message='Hi!'):
     response.cookies.add_unsigned_cookie('message', message)
     return response
 
+
 @route('/cookie-get')
 def get_cookies(request):
     logged_in = request.COOKIES.get_cookie('logged_in')
@@ -70,12 +80,14 @@ def get_cookies(request):
         return message
     raise Http403({'#details': 'Go away!'})
 
+
 @route('/cookie-del')
-def get_cookies(request):
+def del_cookies(_):
     response = Response('Cookies deleted!')
     response.cookies.del_cookie('logged_in')
     response.cookies.del_cookie('message')
     return response
+
 
 if __name__ == '__main__':
     from pyroutes import utils

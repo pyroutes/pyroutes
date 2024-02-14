@@ -8,7 +8,6 @@ import datetime
 import mimetypes
 import posixpath
 import os
-os.path = posixpath
 
 from pyroutes import settings
 from pyroutes.template import TemplateRenderer
@@ -16,6 +15,9 @@ from pyroutes.http.response import Response, Redirect, Http403, Http404
 from pyroutes.contrib import autoreload
 
 from wsgiref.simple_server import make_server
+
+os.path = posixpath
+
 
 def devserver(application, port=8001, address='0.0.0.0', auto_reload=True):
     """
@@ -35,12 +37,13 @@ def devserver(application, port=8001, address='0.0.0.0', auto_reload=True):
     def server_thread():
         "A small wrapper method for wsgiref.make_server().serve_forever()"
         httpd = make_server(address, port, application)
-        print "Starting server on %s port %d..." % (address, port)
+        print("Starting server on http://%s:%d/" % (address, port))
         httpd.serve_forever()
     if auto_reload:
         autoreload.main(server_thread)
     else:
         server_thread()
+
 
 def fileserver(request, *path_list):
     """
@@ -79,7 +82,7 @@ def fileserver(request, *path_list):
     if 'HTTP_IF_MODIFIED_SINCE' in request.ENV:
         if request.ENV.get('HTTP_IF_MODIFIED_SINCE') == modified:
             return Response(status_code='304 Not Modified',
-                    default_content_header=False)
+                            default_content_header=False)
 
     headers = [
         ('Last-Modified', modified),
@@ -93,8 +96,7 @@ def fileserver(request, *path_list):
         files = []
         for entry in sorted(os.listdir(path)):
             if os.path.isdir(os.path.join(path, entry)):
-                listing.append({'li':
-                    {'a': entry + "/", 'a/href': entry + "/"}})
+                listing.append({'li': {'a': entry + "/", 'a/href': entry + "/"}})
             else:
                 files.append({'li': {'a': entry, 'a/href': entry}})
         # Done to list folders before files
@@ -123,10 +125,11 @@ def fileserver(request, *path_list):
     headers.append(('Content-Type', contenttype))
     headers.append(('Content-Length', str(size)))
 
-    def file_wrapper(iterable):
-        return iter(lambda: iterable.read(8192), '')
     if 'wsgi.file_wrapper' in request.ENV:
         file_wrapper = request.ENV['wsgi.file_wrapper']
+    else:
+        def file_wrapper(iterable):
+            return iter(lambda: iterable.read(8192), '')
 
     fh = open(path, 'rb')
     wrapped_file = file_wrapper(fh)

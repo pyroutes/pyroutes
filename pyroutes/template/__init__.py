@@ -6,9 +6,9 @@ This module holds wrappers for xmltemplate, and xmltemplate itself.
 """
 
 import os
-import sys
 from pyroutes.template import xmltemplate
 from pyroutes import settings
+
 
 class TemplateRenderer(object):
     """
@@ -23,8 +23,7 @@ class TemplateRenderer(object):
     template.
     """
 
-    def __init__(self, base_template=None, inclusion_param='contents',
-            template_dir=None):
+    def __init__(self, base_template=None, inclusion_param='contents', template_dir=None):
         """
         Takes three parameters.
         - ``base_template``: The base template. Usually with the html headers,

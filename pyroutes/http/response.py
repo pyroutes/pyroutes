@@ -53,6 +53,7 @@ _RESPONSES = {
     504: 'Gateway Timeout',
     505: 'HTTP Version Not Supported'}
 
+
 class Response(object):
     """
     A wrapper class for a response to a route. Takes a content, headers and
@@ -61,13 +62,13 @@ class Response(object):
     name, or an integer. If default_content_header is set and no Content-Type
     header is set, settings.DEFAULT_CONTENT_TYPE is added as Content-Type.
     """
-    def __init__(self, content=None, headers=None, status_code='200 OK',
-            default_content_header=True):
+
+    def __init__(self, content=None, headers=None, status_code=200, default_content_header=True):
         if content is None:
             self.content = []
         else:
             self.content = content
-        
+
         self.headers = []
 
         header_names = []
@@ -92,6 +93,7 @@ class Response(object):
 
         self.cookies = ResponseCookieHandler()
 
+
 class Redirect(Response):
     """
     A redirect shortcut class for redirection responses
@@ -111,8 +113,7 @@ class Redirect(Response):
 
         if (location.startswith('/') and not absolute_path and
                 hasattr(settings, 'SITE_ROOT')):
-            location = '/'.join([settings.SITE_ROOT.rstrip('/'),
-                location.lstrip('/')])
+            location = '/'.join([settings.SITE_ROOT.rstrip('/'), location.lstrip('/')])
 
         super(Redirect, self).__init__(
             content="redirect",
@@ -120,17 +121,19 @@ class Redirect(Response):
             status_code=302,
             default_content_header=False)
 
+
 class HttpException(Exception):
     """
     HttpException objects are to be used by end users to facilitate returning
     HTTP 403, 404 and 500 pages with standard documents.
     Use e.g. settings.TEMPLATE_403 to override the document for HTTP 403.
     """
+
     def __init__(self, template_data=None):
         Exception.__init__(self)
         if not hasattr(self, 'code'):
             raise TypeError('You tried to instanciate HttpException. ' +
-                    'Please, only create instances of Http{403,404,500}.')
+                            'Please, only create instances of Http{403,404,500}.')
 
         self.template_data = template_data
         self.template_variable = 'TEMPLATE_%d' % self.code
@@ -162,13 +165,16 @@ class HttpException(Exception):
         document = self.templaterenderer.render(self.template, template_data)
         return Response(document, status_code=self.status_code)
 
+
 class Http403(HttpException):
     "403 Forbidden exception"
     code = 403
 
+
 class Http404(HttpException):
     "404 Not Found exception"
     code = 404
+
 
 class Http500(HttpException):
     "500 Server Error exception"

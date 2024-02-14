@@ -25,15 +25,17 @@ DEFAULT_CONTENT_TYPE = 'text/html; charset=utf-8'
 SECRET_KEY = None
 
 # Location for templates. Used by TemplateRenderer
-TEMPLATE_DIR = None # /foo/bar/templates/
+TEMPLATE_DIR = None  # "/foo/bar/templates/"
 
 # Middleware
 MIDDLEWARE = (
     'pyroutes.middleware.errors.NotFoundMiddleware',
-    #'pyroutes.middleware.appendslash.AppendSlashes',
+    # 'pyroutes.middleware.appendslash.AppendSlashes',
     'pyroutes.middleware.responsify.Responsify',
     'pyroutes.middleware.errors.ErrorHandlerMiddleware',
 )
+
+SITE_ROOT = None
 
 # Attempt to get custom settings. Not obligatory.
 try:

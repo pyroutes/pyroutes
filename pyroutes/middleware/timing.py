@@ -6,6 +6,7 @@ import time
 
 from pyroutes import settings
 
+
 class TimingMiddleware(object):
     """
     This middleware add a timing number at the bottom of the page if
@@ -14,7 +15,8 @@ class TimingMiddleware(object):
 
     Primitive profiling, but quite useful.
     """
-    def __init__(self, passthrough, route):
+
+    def __init__(self, passthrough, _):
         self.passthrough = passthrough
 
     def __call__(self, request):
@@ -31,9 +33,9 @@ class TimingMiddleware(object):
                     elapsed = (end_time - start_time) * 1000
                     if response.content.endswith('</html>'):
                         response.content = (response.content[:-len('</html>')] +
-                                '<pre id="pyroutes_timing">Page took %0.3f' +
-                                ' ms to generate</pre></html>' % elapsed)
+                                            '<pre id="pyroutes_timing">Page took %0.3f' +
+                                            ' ms to generate</pre></html>' % elapsed)
                     else:
                         response.content += ('\n<pre id="pyroutes_timing">' +
-                               'Page took %0.3f ms to generate</pre>' % elapsed)
+                                             'Page took %0.3f ms to generate</pre>' % elapsed)
         return response

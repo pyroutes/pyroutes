@@ -4,6 +4,7 @@ Middleware for making non-response objects into Responses
 
 from pyroutes.http.response import Response
 
+
 class Responsify(object):
     """
     If a non-response object s (e.g a string) is passed, returns Response(s)
@@ -20,7 +21,8 @@ class Responsify(object):
         >>> route('/')(bar)
 
     """
-    def __init__(self, passthrough, route):
+
+    def __init__(self, passthrough, _):
         self.passthrough = passthrough
 
     def __call__(self, request):

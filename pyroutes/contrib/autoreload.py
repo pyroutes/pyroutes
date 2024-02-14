@@ -30,19 +30,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os, sys, time
+import os
+import sys
+import time
 
-try:
-    import thread
-except ImportError:
-    import dummy_thread as thread
-
-# This import does nothing, but it's necessary to avoid some race conditions
-# in the threading module. See http://code.djangoproject.com/ticket/2330 .
-try:
-    import threading
-except ImportError:
-    pass
+import threading
 
 try:
     import termios
@@ -54,9 +46,11 @@ RUN_RELOADER = True
 _mtimes = {}
 _win = (sys.platform == "win32")
 
+
 def code_changed():
     global _mtimes, _win
-    for filename in filter(lambda v: v, map(lambda m: getattr(m, "__file__", None), sys.modules.values())):
+    modules = list(sys.modules.values())
+    for filename in filter(lambda v: v, map(lambda m: getattr(m, "__file__", None), modules)):
         if filename.endswith(".pyc") or filename.endswith(".pyo"):
             filename = filename[:-1]
         if not os.path.exists(filename):
@@ -73,6 +67,7 @@ def code_changed():
             return True
     return False
 
+
 def ensure_echo_on():
     if termios:
         fd = sys.stdin.fileno()
@@ -81,12 +76,14 @@ def ensure_echo_on():
             attr_list[3] |= termios.ECHO
             termios.tcsetattr(fd, termios.TCSANOW, attr_list)
 
+
 def reloader_thread():
     ensure_echo_on()
     while RUN_RELOADER:
         if code_changed():
-            sys.exit(3) # force reload
+            sys.exit(3)  # force reload
         time.sleep(1)
+
 
 def restart_with_reloader():
     while True:
@@ -99,9 +96,12 @@ def restart_with_reloader():
         if exit_code != 3:
             return exit_code
 
-def python_reloader(main_func, args, kwargs):
+
+def reloader(main_func, args, kwargs):
     if os.environ.get("RUN_MAIN") == "true":
-        thread.start_new_thread(main_func, args, kwargs)
+        t = threading.Thread(target=main_func, args=args, kwargs=kwargs)
+        t.daemon = True
+        t.start()
         try:
             reloader_thread()
         except KeyboardInterrupt:
@@ -112,23 +112,10 @@ def python_reloader(main_func, args, kwargs):
         except KeyboardInterrupt:
             pass
 
-def jython_reloader(main_func, args, kwargs):
-    from _systemrestart import SystemRestart
-    thread.start_new_thread(main_func, args)
-    while True:
-        if code_changed():
-            raise SystemRestart
-        time.sleep(1)
-
 
 def main(main_func, args=None, kwargs=None):
     if args is None:
         args = ()
     if kwargs is None:
         kwargs = {}
-    if sys.platform.startswith('java'):
-        reloader = jython_reloader
-    else:
-        reloader = python_reloader
     reloader(main_func, args, kwargs)
-
