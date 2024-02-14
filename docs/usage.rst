@@ -87,7 +87,7 @@ Let's try what we have so far. Open up a terminal, go to the directory where
 you saved the ``handler.py`` file, and execute it::
 
     $ python handler.py
-    Starting server on 0.0.0.0 port 8001...
+    Starting server on http://127.0.0.1:8001/
 
 Your application should now be running on port 8001. Let's try it.::
 

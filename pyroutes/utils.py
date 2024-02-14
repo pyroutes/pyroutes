@@ -19,7 +19,7 @@ from wsgiref.simple_server import make_server
 os.path = posixpath
 
 
-def devserver(application, port=8001, address='0.0.0.0', auto_reload=True):
+def devserver(application, port=8001, address='127.0.0.1', auto_reload=True):
     """
     Simple development server for rapid development. Use to create a simple web
     server. For testing purposes only. Has no builting handling of file
