@@ -12,7 +12,6 @@ packages = ['pyroutes', 'pyroutes.http', 'pyroutes.template', 'pyroutes.contrib'
 
 try:
     import setuptools
-    kwargs['use_2to3'] = True
     if len(sys.argv) > 1 and sys.argv[1] == 'test':
         packages.append('tests')
         kwargs['test_suite'] = 'tests'
