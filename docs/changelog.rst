@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Release 0.5.1
+-------------
+
+- Make the devserver listen to localhost by default
+- Remove python2 support so we can install on newer python3
+
 Release 0.5.0
 -------------
 

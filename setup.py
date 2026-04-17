@@ -23,7 +23,7 @@ long_description = open(os.path.join(base_dir, 'README.rst')).read()
 
 setup(
     name = "pyroutes",
-    version = "0.4.1",
+    version = "0.5.1",
     author_email = 'klette@samfundet.no',
     author = 'Kristian Klette',
     description = "A small WSGI wrapper for creating small python web apps",
