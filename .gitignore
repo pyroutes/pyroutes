@@ -1,5 +1,22 @@
-*.pyc
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Tools
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.ty/
+
+# Coverage
 .coverage
 */.coverage
+
+# Docs
 /doc/_build
+
+# Examples
 /examples/pyroutes
