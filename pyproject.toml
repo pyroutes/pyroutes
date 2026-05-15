@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyroutes"
+version = "0.6.0"
+description = "A small WSGI wrapper for creating small python web apps"
+readme = "README.rst"
+license = "GPL-2.0-only"
+requires-python = ">=3.13"
+authors = [
+    { name = "Kristian Klette", email = "klette@samfundet.no" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: WSGI",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/pyroutes/pyroutes"
+
+[tool.setuptools.packages.find]
+include = ["pyroutes*"]
+
+[tool.setuptools.package-data]
+pyroutes = ["default_templates/*.xml", "default_templates/fileserver/*.xml", "py.typed"]
